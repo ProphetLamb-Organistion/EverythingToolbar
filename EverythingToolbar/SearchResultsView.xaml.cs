@@ -31,24 +31,22 @@ namespace EverythingToolbar
 
         private void OnScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            if (e.VerticalChange > 0)
+            if (!(e.VerticalChange > 0)) return;
+            if (e.VerticalOffset > e.ExtentHeight - 2 * e.ViewportHeight)
             {
-                if (e.VerticalOffset > e.ExtentHeight - 2 * e.ViewportHeight)
-                {
-                    EverythingSearch.Instance.QueryBatch();
-                    ScrollToVerticalOffset(e.VerticalOffset);
-                }
+                EverythingSearch.Instance.QueryBatch();
+                ScrollToVerticalOffset(e.VerticalOffset);
             }
         }
 
         public void ScrollToVerticalOffset(double verticalOffset)
         {
-            Dispatcher.Invoke(new Action(() =>
+            Dispatcher.Invoke(() =>
             {
                 Decorator listViewBorder = VisualTreeHelper.GetChild(SearchResultsListView, 0) as Decorator;
                 ScrollViewer listViewScrollViewer = listViewBorder.Child as ScrollViewer;
                 listViewScrollViewer.ScrollToVerticalOffset(verticalOffset);
-            }), DispatcherPriority.ContextIdle);
+            }, DispatcherPriority.ContextIdle);
         }
 
         public void SelectNextSearchResult()
