@@ -11,7 +11,7 @@ namespace EverythingToolbar
         Folder
     }
 
-    [Serializable()]
+    [Serializable]
     public class Rule : INotifyPropertyChanged
     {
         [field: NonSerialized]
