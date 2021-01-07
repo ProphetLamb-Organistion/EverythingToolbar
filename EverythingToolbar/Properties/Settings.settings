@@ -53,5 +53,8 @@
     <Setting Name="isHideEmptySearchResults" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="favoritesRelativePathAndFileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.\\favorites.json</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
