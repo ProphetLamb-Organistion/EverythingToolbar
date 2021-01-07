@@ -11,6 +11,7 @@
             <ContextMenu.Resources>
                 <Style TargetType="{x:Type MenuItem}">
                     <Setter Property="Focusable" Value="False" />
+                    <Setter Property="Height" Value="30"/>
                 </Style>
             </ContextMenu.Resources>
 
@@ -33,6 +34,7 @@
                 <MenuItem.Style>
                     <Style TargetType="{x:Type MenuItem}">
                         <Setter Property="Focusable" Value="False" />
+                        <Setter Property="Height" Value="30"/>
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Source={x:Static properties:Settings.Default}, Path=isRegExEnabled, Mode=OneWay}" Value="True">
                                 <Setter Property="IsEnabled" Value="False" />
