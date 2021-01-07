@@ -286,9 +286,9 @@ namespace EverythingToolbar
 
         public void OpenLastSearchInEverything(string highlighted_file = "")
         {
-            if(!File.Exists(Properties.Settings.Default.everythingPath))
+            if(!File.Exists(Settings.Default.everythingPath))
             {
-                MessageBox.Show(Properties.Resources.MessageBoxSelectEverythingExe);
+                MessageBox.Show(Resources.MessageBoxSelectEverythingExe);
                 using (OpenFileDialog openFileDialog = new OpenFileDialog())
                 {
                     openFileDialog.InitialDirectory = "c:\\";
@@ -297,8 +297,8 @@ namespace EverythingToolbar
 
                     if (openFileDialog.ShowDialog() == DialogResult.OK)
                     {
-                        Properties.Settings.Default.everythingPath = openFileDialog.FileName;
-                        Properties.Settings.Default.Save();
+                        Settings.Default.everythingPath = openFileDialog.FileName;
+                        Settings.Default.Save();
                     }
                     else
                     {
