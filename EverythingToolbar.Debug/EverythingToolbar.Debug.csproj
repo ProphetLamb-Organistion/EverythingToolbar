@@ -117,4 +117,7 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy $(ProjectDir)..\EverythingToolbar\bin\Debug\*.* $(ProjectDir)$(OutDir)  /s /e /c /i /r /y</PostBuildEvent>
+  </PropertyGroup>
 </Project>
