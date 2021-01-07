@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Forms;
+using EverythingToolbar.Properties;
 
 namespace EverythingToolbar
 {
@@ -154,7 +155,7 @@ namespace EverythingToolbar
                 logger.Error(e, "Everything64.dll could not be opened.");
             }
 
-            Properties.Settings.Default.PropertyChanged += OnSettingChanged;
+            Settings.Default.PropertyChanged += OnSettingChanged;
             BindingOperations.EnableCollectionSynchronization(SearchResults, _searchResultsLock);
         }
 
@@ -183,7 +184,7 @@ namespace EverythingToolbar
             if (SearchTerm == null)
                 return;
 
-            if (SearchTerm == "" && Properties.Settings.Default.isHideEmptySearchResults)
+            if (String.IsNullOrEmpty(SearchTerm) && Settings.Default.isHideEmptySearchResults)
                 return;
 
             cancellationTokenSource = new CancellationTokenSource();
@@ -199,11 +200,11 @@ namespace EverythingToolbar
 
                     Everything_SetSearchW(CurrentFilter.Search + (CurrentFilter.Search.Length > 0 ? " " : "") + SearchTerm);
                     Everything_SetRequestFlags(flags);
-                    Everything_SetSort((uint)Properties.Settings.Default.sortBy);
-                    Everything_SetMatchCase(Properties.Settings.Default.isMatchCase);
-                    Everything_SetMatchPath(Properties.Settings.Default.isMatchPath);
-                    Everything_SetMatchWholeWord(Properties.Settings.Default.isMatchWholeWord);
-                    Everything_SetRegex(Properties.Settings.Default.isRegExEnabled);
+                    Everything_SetSort((uint)Settings.Default.sortBy);
+                    Everything_SetMatchCase(Settings.Default.isMatchCase);
+                    Everything_SetMatchPath(Settings.Default.isMatchPath);
+                    Everything_SetMatchWholeWord(Settings.Default.isMatchWholeWord);
+                    Everything_SetRegex(Settings.Default.isRegExEnabled);
                     Everything_SetMax((uint)BatchSize);
                     lock (_searchResultsLock)
                         Everything_SetOffset((uint)SearchResults.Count);
@@ -288,29 +289,29 @@ namespace EverythingToolbar
             }
 
             string args = "";
-            if (Properties.Settings.Default.sortBy <= 2) args += " -sort \"Name\"";
-            else if (Properties.Settings.Default.sortBy <= 4) args += " -sort \"Path\"";
-            else if (Properties.Settings.Default.sortBy <= 6) args += " -sort \"Size\"";
-            else if (Properties.Settings.Default.sortBy <= 8) args += " -sort \"Extension\"";
-            else if (Properties.Settings.Default.sortBy <= 10) args += " -sort \"Type name\"";
-            else if (Properties.Settings.Default.sortBy <= 12) args += " -sort \"Date created\"";
-            else if (Properties.Settings.Default.sortBy <= 14) args += " -sort \"Date modified\"";
-            else if (Properties.Settings.Default.sortBy <= 16) args += " -sort \"Attributes\"";
-            else if (Properties.Settings.Default.sortBy <= 18) args += " -sort \"File list filename\"";
-            else if (Properties.Settings.Default.sortBy <= 20) args += " -sort \"Run count\"";
-            else if (Properties.Settings.Default.sortBy <= 22) args += " -sort \"Date recently changed\"";
-            else if (Properties.Settings.Default.sortBy <= 24) args += " -sort \"Date accessed\"";
-            else if (Properties.Settings.Default.sortBy <= 26) args += " -sort \"Date run\"";
-            if (Properties.Settings.Default.sortBy % 2 > 0) args += " -sort-ascending";
+            if (Settings.Default.sortBy <= 2) args += " -sort \"Name\"";
+            else if (Settings.Default.sortBy <= 4) args += " -sort \"Path\"";
+            else if (Settings.Default.sortBy <= 6) args += " -sort \"Size\"";
+            else if (Settings.Default.sortBy <= 8) args += " -sort \"Extension\"";
+            else if (Settings.Default.sortBy <= 10) args += " -sort \"Type name\"";
+            else if (Settings.Default.sortBy <= 12) args += " -sort \"Date created\"";
+            else if (Settings.Default.sortBy <= 14) args += " -sort \"Date modified\"";
+            else if (Settings.Default.sortBy <= 16) args += " -sort \"Attributes\"";
+            else if (Settings.Default.sortBy <= 18) args += " -sort \"File list filename\"";
+            else if (Settings.Default.sortBy <= 20) args += " -sort \"Run count\"";
+            else if (Settings.Default.sortBy <= 22) args += " -sort \"Date recently changed\"";
+            else if (Settings.Default.sortBy <= 24) args += " -sort \"Date accessed\"";
+            else if (Settings.Default.sortBy <= 26) args += " -sort \"Date run\"";
+            if (Settings.Default.sortBy % 2 > 0) args += " -sort-ascending";
             else args += " -sort-descending";
             if (highlighted_file != "") args += " -select \"" + highlighted_file + "\"";
-            args += Properties.Settings.Default.isMatchCase ? " -case" : " -nocase";
-            args += Properties.Settings.Default.isMatchPath ? " -matchpath" : " -nomatchpath";
-            args += Properties.Settings.Default.isMatchWholeWord ? " -ww" : " -noww";
-            args += Properties.Settings.Default.isRegExEnabled ? " -regex" : " -noregex";
+            args += Settings.Default.isMatchCase ? " -case" : " -nocase";
+            args += Settings.Default.isMatchPath ? " -matchpath" : " -nomatchpath";
+            args += Settings.Default.isMatchWholeWord ? " -ww" : " -noww";
+            args += Settings.Default.isRegExEnabled ? " -regex" : " -noregex";
             args += " -s \"" + (CurrentFilter.Search + " " + SearchTerm).Replace("\"", "\"\"") + "\"";
 
-            Process.Start(Properties.Settings.Default.everythingPath, args);
+            Process.Start(Settings.Default.everythingPath, args);
         }
 
         public void IncrementRunCount(string path)
