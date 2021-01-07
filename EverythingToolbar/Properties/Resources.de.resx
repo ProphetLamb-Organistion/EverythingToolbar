@@ -417,4 +417,7 @@
   <data name="KeyWin" xml:space="preserve">
     <value>Win</value>
   </data>
+  <data name="ContextMenuAddToFavorites" xml:space="preserve">
+    <value>Zu Favoriten hinzufügen</value>
+  </data>
 </root>

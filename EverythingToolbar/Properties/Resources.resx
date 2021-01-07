@@ -132,6 +132,9 @@
   <data name="AboutWindowTitle" xml:space="preserve">
     <value>About EverythingToolbar</value>
   </data>
+  <data name="ContextMenuAddToFavorites" xml:space="preserve">
+    <value>Add to Favorites</value>
+  </data>
   <data name="ContextMenuCopy" xml:space="preserve">
     <value>Copy</value>
   </data>
