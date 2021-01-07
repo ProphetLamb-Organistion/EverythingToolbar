@@ -104,5 +104,25 @@ namespace EverythingToolbar
         {
             EverythingSearch.Instance.OpenLastSearchInEverything(FullPathAndFileName);
         }
+
+        #region IEquatable members
+        public override bool Equals(object obj) => Equals(obj as SearchResult);
+        public bool Equals(SearchResult other) => other != null
+            && IsFile == other.IsFile
+            && String.Equals(FullPathAndFileName, other.FullPathAndFileName, StringComparison.OrdinalIgnoreCase)
+            && String.Equals(HighlightedPath, other.HighlightedPath, StringComparison.OrdinalIgnoreCase)
+            && String.Equals(HighlightedFileName, other.HighlightedFileName, StringComparison.OrdinalIgnoreCase)
+            && String.Equals(FileSize, other.FileSize, StringComparison.OrdinalIgnoreCase)
+            && String.Equals(DateModified, other.DateModified, StringComparison.OrdinalIgnoreCase)
+            && String.Equals(IconSourceFilePath, other.IconSourceFilePath, StringComparison.OrdinalIgnoreCase);
+
+        public override int GetHashCode()
+        {
+            return FullPathAndFileName?.GetHashCode() ?? 0;
+        }
+
+        public static bool operator ==(SearchResult left, SearchResult right) => EqualityComparer<SearchResult>.Default.Equals(left, right);
+        public static bool operator !=(SearchResult left, SearchResult right) => !(left == right);
+        #endregion
     }
 }
