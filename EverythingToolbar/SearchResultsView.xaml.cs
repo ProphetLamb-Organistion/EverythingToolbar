@@ -20,6 +20,7 @@ namespace EverythingToolbar
 
             SearchResultsListView.ItemsSource = EverythingSearch.Instance.SearchResults;
             ((INotifyCollectionChanged)SearchResultsListView.Items).CollectionChanged += OnCollectionChanged;
+            ((CollectionView)CollectionViewSource.GetDefaultView(SearchResultsListView.ItemsSource)).GroupDescriptions.Add(new PropertyGroupDescription("IsFavorite"));
         }
 
         private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
