@@ -81,10 +81,7 @@ namespace EverythingToolbar
         private string _searchTerm;
         public string SearchTerm
         {
-            get
-            {
-                return _searchTerm;
-            }
+            get => _searchTerm;
             set
             {
                 if (_searchTerm == value)
@@ -101,10 +98,7 @@ namespace EverythingToolbar
         private Filter _currentFilter;
         public Filter CurrentFilter
         {
-            get
-            {
-                return _currentFilter ?? FilterLoader.Instance.DefaultFilters[0];
-            }
+            get => _currentFilter ?? FilterLoader.Instance.DefaultFilters[0];
             set
             {
                 if (_currentFilter == value)
