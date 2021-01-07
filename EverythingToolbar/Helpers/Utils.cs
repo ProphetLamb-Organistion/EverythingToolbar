@@ -1,55 +1,47 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 
 namespace EverythingToolbar.Helpers
 {
-    class Utils
+    internal static class Utils
     {
         // Taken from: https://stackoverflow.com/a/11124118/1477251
         public static string GetHumanReadableFileSize(string path)
         {
             // Get file length
-            long length;
-            try
-            {
-                length = new FileInfo(path).Length;
-            }
-            catch
-            {
-                return "";
-            }
-
-            // Get absolute value
-            long absolute_i = length < 0 ? -length : length;
+            long length = Math.Abs(new FileInfo(path).Length);
 
             // Determine the suffix and readable value
             string suffix;
             double readable;
-            if (absolute_i >= 0x1000000000000000) // Exabyte
+            if (length >= 0x1000000000000000L) // Exabyte
             {
                 suffix = "EB";
                 readable = (length >> 50);
             }
-            else if (absolute_i >= 0x4000000000000) // Petabyte
+            else if (length >= 0x4000000000000L) // Petabyte
             {
                 suffix = "PB";
                 readable = (length >> 40);
             }
-            else if (absolute_i >= 0x10000000000) // Terabyte
+            else if (length >= 0x10000000000L) // Terabyte
             {
                 suffix = "TB";
                 readable = (length >> 30);
             }
-            else if (absolute_i >= 0x40000000) // Gigabyte
+            else if (length >= 0x40000000L) // Gigabyte
             {
                 suffix = "GB";
                 readable = (length >> 20);
             }
-            else if (absolute_i >= 0x100000) // Megabyte
+            else if (length >= 0x100000L) // Megabyte
             {
                 suffix = "MB";
                 readable = (length >> 10);
             }
-            else if (absolute_i >= 0x400) // Kilobyte
+            else if (length >= 0x400L) // Kilobyte
             {
                 suffix = "KB";
                 readable = length;
