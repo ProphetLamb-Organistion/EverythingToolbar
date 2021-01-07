@@ -11,7 +11,7 @@ namespace EverythingToolbar
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             bool invert = System.Convert.ToBoolean(parameter);
-
+            
             if ((bool)value)
             {
                 return invert ? Visibility.Collapsed : Visibility.Visible;
