@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace EverythingToolbar
 {
-    public partial class SearchResultsView : UserControl
+    public partial class SearchResultsView
     {
         private SearchResult SelectedItem => SearchResultsListView.SelectedItem as SearchResult;
 
