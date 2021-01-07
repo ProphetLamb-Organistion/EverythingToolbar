@@ -114,6 +114,7 @@ namespace EverythingToolbar
 
         public ObservableCollection<SearchResult> SearchResults = new ObservableCollection<SearchResult>();
         public int BatchSize = 100;
+        internal static readonly Favorites Favorites = new Favorites();
         public static readonly EverythingSearch Instance = new EverythingSearch();
         private readonly object _searchResultsLock = new object();
         private readonly ILogger logger;
