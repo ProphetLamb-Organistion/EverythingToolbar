@@ -72,13 +72,10 @@ namespace EverythingToolbar
             if (SearchResultsListView.SelectedIndex == -1)
                 SelectNextSearchResult();
 
-            if (SearchResultsListView.SelectedIndex != -1)
-            {
-                if (Rules.HandleRule(SelectedItem))
-                    return;
+            if (SearchResultsListView.SelectedIndex == -1 || Rules.HandleRule(SelectedItem))
+                return;
 
-                SelectedItem?.Open();
-            }
+            SelectedItem?.Open();
         }
 
         private void OpenFilePath(object sender, RoutedEventArgs e)
@@ -131,11 +128,8 @@ namespace EverythingToolbar
                 mi.Items.RemoveAt(0);
 
             List<Rule> rules = Rules.LoadRules();
-
-            if (rules.Count > 0)
-                (mi.Items[0] as MenuItem).Visibility = Visibility.Collapsed;
-            else
-                (mi.Items[0] as MenuItem).Visibility = Visibility.Visible;
+            if (mi.Items[0] is MenuItem cMi)
+                cMi.Visibility = rules.Count > 0 ? Visibility.Collapsed : Visibility.Visible;
 
             for (int i = rules.Count - 1; i >= 0; i--)
             {
@@ -149,14 +143,19 @@ namespace EverythingToolbar
         private void OpenWithRule(object sender, RoutedEventArgs e)
         {
             SearchResult searchResult = SearchResultsListView.SelectedItem as SearchResult;
-            string command = (sender as MenuItem).Tag?.ToString() ?? "";
+            string command = (sender as MenuItem)?.Tag?.ToString() ?? "";
             Rules.HandleRule(searchResult, command);
         }
 
         private void OnListViewItemClicked(object sender, MouseButtonEventArgs e)
         {
-            var item = (sender as Border).DataContext;
+            var item = (sender as Border)?.DataContext;
             SearchResultsListView.SelectedIndex = SearchResultsListView.Items.IndexOf(item);
+        }
+
+        private void AddToFavorites(object sender, RoutedEventArgs e)
+        {
+            EverythingSearch.Favorites.AddAndWriteAsync(SelectedItem).ConfigureAwait(false);
         }
     }
 }
