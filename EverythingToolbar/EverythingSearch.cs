@@ -2,6 +2,7 @@
 using EverythingToolbar.Helpers;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -189,6 +190,7 @@ namespace EverythingToolbar
 
             cancellationTokenSource = new CancellationTokenSource();
             CancellationToken cancellationToken = cancellationTokenSource.Token;
+            IList<SearchResult> favoriteResultBuffer = new List<SearchResult>();
 
             Task.Run(() =>
             {
@@ -220,23 +222,40 @@ namespace EverythingToolbar
                     for (uint i = 0; i < resultsCount; i++)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
-                        string path = Marshal.PtrToStringUni(Everything_GetResultHighlightedPath(i)).ToString();
-                        string filename = Marshal.PtrToStringUni(Everything_GetResultHighlightedFileName(i)).ToString();
-                        bool isFile = Everything_IsFileResult(i);
-                        StringBuilder fullPath = new StringBuilder(4096);
-                        Everything_GetResultFullPathNameW(i, fullPath, 4096);
-
-                        lock (_searchResultsLock)
+                        IntPtr highlightedPathPtr = Everything_GetResultHighlightedPath(i);
+                        IntPtr highlightedNamePtr = Everything_GetResultHighlightedFileName(i);
+                        // Validate return pointer from external lib functions: Prevent possible NullPointerException
+                        if (highlightedPathPtr != IntPtr.Zero || highlightedNamePtr != IntPtr.Zero)
                         {
-                            SearchResults.Add(new SearchResult()
+                            string path = Marshal.PtrToStringUni(highlightedPathPtr);
+                            string filename = Marshal.PtrToStringUni(highlightedNamePtr);
+                            bool isFile = Everything_IsFileResult(i);
+                            StringBuilder fullPath = new StringBuilder(4096);
+                            Everything_GetResultFullPathNameW(i, fullPath, 4096);
+
+                            string filePath = fullPath.ToString();
+                            SearchResult searchResult = new SearchResult
                             {
-                                HighlightedPath = path.ToString(),
-                                FullPathAndFileName = fullPath.ToString(),
+                                HighlightedPath = path,
+                                FullPathAndFileName = filePath,
                                 HighlightedFileName = filename,
                                 IsFile = isFile
-                            });
+                            };
+                            if (Favorites.Contains(filePath))
+                            {
+                                searchResult.IsFavorite = true;
+                                favoriteResultBuffer.Add(searchResult);
+                            }
+                            else
+                            {
+                                lock (_searchResultsLock)
+                                    SearchResults.Add(searchResult);
+                            }
                         }
                     }
+                    // Insert favorites in order to the top
+                    lock (_searchResultsLock)
+                        SearchResults.InsertRange(favoriteResultBuffer);
                 }
                 catch (OperationCanceledException) { }
             }, cancellationToken);
