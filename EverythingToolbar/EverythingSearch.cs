@@ -126,6 +126,8 @@ namespace EverythingToolbar
         {
             logger = ToolbarLogger.GetLogger("EverythingToolbar");
 
+            Favorites.ReadAsync().ConfigureAwait(false);
+
             try
             {
                 uint major = Everything_GetMajorVersion();
