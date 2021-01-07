@@ -57,5 +57,63 @@ namespace EverythingToolbar.Helpers
             // Return formatted number with suffix
             return readable.ToString("0.### ") + suffix;
         }
+        
+        public static TReturn Catch<TReturn, TException>(Func<TReturn> function, TReturn fallback = default) where TException : Exception
+        {
+            try
+            {
+                return function();
+            }
+            catch (TException)
+            {
+                return fallback;
+            }
+        }
+        public static TReturn Catch<TReturn, TException1, TException2>(Func<TReturn> function, TReturn fallback = default)
+            where TException1 : Exception where TException2 : Exception
+        {
+            try
+            {
+                return function();
+            }
+            catch (Exception ex)
+            {
+                if (ex is TException1 || ex is TException2)
+                    return fallback;
+                throw;
+            }
+        }
+        public static TReturn Catch<TReturn, TException1, TException2, TException3>(Func<TReturn> function, TReturn fallback = default)
+            where TException1 : Exception where TException2 : Exception where TException3 : Exception
+        {
+            try
+            {
+                return function();
+            }
+            catch (Exception ex)
+            {
+                if (ex is TException1 || ex is TException2 || ex is TException3)
+                    return fallback;
+                throw;
+            }
+        }
+        
+        public static void InsertRange<T>(this Collection<T> self, IEnumerable<T> itemSource)
+        {
+            using IEnumerator<T> en = itemSource.GetEnumerator();
+            for (int i = 0; en.MoveNext(); i++)
+            {
+                self.Insert(i, en.Current);
+            }
+        }
+
+        public static void InsertRange<T>(this IList<T> self, IEnumerable<T> itemSource)
+        {
+            using IEnumerator<T> en = itemSource.GetEnumerator();
+            for (int i = 0; en.MoveNext(); i++)
+            {
+                self.Insert(i, en.Current);
+            }
+        }
     }
 }
