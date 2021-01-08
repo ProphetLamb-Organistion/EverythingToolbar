@@ -54,7 +54,10 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="favoritesRelativePathAndFileName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">.\\favorites.json</Value>
+      <Value Profile="(Default)">.\\favorites.efu</Value>
+    </Setting>
+    <Setting Name="quickCommandPrefix" Type="System.String" Scope="User">
+      <Value Profile="(Default)">:</Value>
     </Setting>
   </Settings>
 </SettingsFile>

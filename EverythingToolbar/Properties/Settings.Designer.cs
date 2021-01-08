@@ -229,13 +229,25 @@ namespace EverythingToolbar.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(".\\\\favorites.json")]
+        [global::System.Configuration.DefaultSettingValueAttribute(".\\\\favorites.efu")]
         public string favoritesRelativePathAndFileName {
             get {
                 return ((string)(this["favoritesRelativePathAndFileName"]));
             }
             set {
                 this["favoritesRelativePathAndFileName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(":")]
+        public string quickCommandPrefix {
+            get {
+                return ((string)(this["quickCommandPrefix"]));
+            }
+            set {
+                this["quickCommandPrefix"] = value;
             }
         }
     }
