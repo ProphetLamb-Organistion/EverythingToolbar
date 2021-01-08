@@ -2,7 +2,7 @@
 
 namespace EverythingToolbar.Data
 {
-    internal class Filter : IEquatable<Filter>
+    internal sealed class Filter : IEquatable<Filter>
     {
         public string Name { get; set; }
         public bool IsMatchCase { get; set; }
@@ -22,7 +22,7 @@ namespace EverythingToolbar.Data
 
         public override int GetHashCode()
         {
-            return (Name != null ? Name.GetHashCode() : 0);
+            return Name != null ? Name.GetHashCode() : 0;
         }
 
         public bool Equals(Filter other)
