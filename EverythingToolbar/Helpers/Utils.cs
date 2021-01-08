@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace EverythingToolbar.Helpers
 {
@@ -57,7 +58,7 @@ namespace EverythingToolbar.Helpers
             // Return formatted number with suffix
             return readable.ToString("0.### ") + suffix;
         }
-        
+
         public static TReturn Catch<TReturn, TException>(Func<TReturn> function, TReturn fallback = default) where TException : Exception
         {
             try
@@ -69,50 +70,29 @@ namespace EverythingToolbar.Helpers
                 return fallback;
             }
         }
-        public static TReturn Catch<TReturn, TException1, TException2>(Func<TReturn> function, TReturn fallback = default)
-            where TException1 : Exception where TException2 : Exception
+
+        public static async Task<TReturn> CatchAsync<TReturn, TException>(Func<TReturn> function, TReturn fallback = default) where TException : Exception
         {
             try
             {
-                return function();
+                return await Task.Run(function);
             }
-            catch (Exception ex)
+            catch (TException)
             {
-                if (ex is TException1 || ex is TException2)
-                    return fallback;
-                throw;
-            }
-        }
-        public static TReturn Catch<TReturn, TException1, TException2, TException3>(Func<TReturn> function, TReturn fallback = default)
-            where TException1 : Exception where TException2 : Exception where TException3 : Exception
-        {
-            try
-            {
-                return function();
-            }
-            catch (Exception ex)
-            {
-                if (ex is TException1 || ex is TException2 || ex is TException3)
-                    return fallback;
-                throw;
-            }
-        }
-        
-        public static void InsertRange<T>(this Collection<T> self, IEnumerable<T> itemSource)
-        {
-            using IEnumerator<T> en = itemSource.GetEnumerator();
-            for (int i = 0; en.MoveNext(); i++)
-            {
-                self.Insert(i, en.Current);
+                return fallback;
             }
         }
 
-        public static void InsertRange<T>(this IList<T> self, IEnumerable<T> itemSource)
+        public static void InsertRange<T>(this Collection<T> self, IEnumerable<T> itemSource, int startIndex = 0)
         {
-            using IEnumerator<T> en = itemSource.GetEnumerator();
-            for (int i = 0; en.MoveNext(); i++)
+            if ((uint)startIndex >= self.Count)
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            using (IEnumerator<T> en = itemSource.GetEnumerator())
             {
-                self.Insert(i, en.Current);
+                for (int i = startIndex; en.MoveNext(); i++)
+                {
+                    self.Insert(i, en.Current);
+                }
             }
         }
     }
