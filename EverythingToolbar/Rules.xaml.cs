@@ -1,4 +1,5 @@
-﻿using EverythingToolbar.Helpers;
+﻿using EverythingToolbar.Data;
+using EverythingToolbar.Helpers;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -13,8 +14,8 @@ namespace EverythingToolbar
 {
     public partial class Rules : Window
     {
-        static List<Rule> rules = new List<Rule>();
-        static string RulesPath => Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "rules.xml");
+        internal static List<Rule> rules = new List<Rule>();
+        internal static string RulesPath => Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "rules.xml");
 
         public Rules()
         {

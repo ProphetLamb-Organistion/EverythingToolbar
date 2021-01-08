@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace EverythingToolbar.Helpers
 {
-    class FilterLoader : INotifyPropertyChanged
+    internal sealed class FilterLoader : INotifyPropertyChanged
     {
         private readonly ObservableCollection<Filter> defaultFilters = new ObservableCollection<Filter>
         {
@@ -42,7 +42,7 @@ namespace EverythingToolbar.Helpers
             }
         };
         public ObservableCollection<Filter> DefaultFilters
-        { 
+        {
             get
             {
                 if (Properties.Settings.Default.isRegExEnabled)
@@ -55,7 +55,6 @@ namespace EverythingToolbar.Helpers
                 }
             }
         }
-        
 
         private readonly ObservableCollection<Filter> defaultUserFilters = new ObservableCollection<Filter>()
         {
@@ -115,7 +114,7 @@ namespace EverythingToolbar.Helpers
             }
         };
         public ObservableCollection<Filter> UserFilters
-        { 
+        {
             get
             {
                 if (Properties.Settings.Default.isRegExEnabled)
@@ -142,10 +141,12 @@ namespace EverythingToolbar.Helpers
 
         private FilterLoader()
         {
-            if (Properties.Settings.Default.filtersPath == "")
+            if (String.IsNullOrEmpty(Properties.Settings.Default.filtersPath))
+            {
                 Properties.Settings.Default.filtersPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                                                                        "Everything",
                                                                        "Filters.csv");
+            }
             Properties.Settings.Default.PropertyChanged += OnPropertyChanged;
 
             RefreshFilters();
@@ -158,7 +159,7 @@ namespace EverythingToolbar.Helpers
                 RefreshFilters();
         }
 
-        void RefreshFilters()
+        internal void RefreshFilters()
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("DefaultFilters"));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UserFilters"));
@@ -214,10 +215,12 @@ namespace EverythingToolbar.Helpers
 
                         // Skip default filters
                         string search = fields[6].Trim();
-                        if (search == "file:" ||
-                            search == "folder:" ||
-                            search == "")
+                        if (String.IsNullOrEmpty(search)
+                         || search == "file:"
+                         || search == "folder:")
+                        {
                             continue;
+                        }
 
                         // Everything's default filters are uppercase
                         fields[0] = fields[0].Replace("AUDIO", Properties.Resources.UserFilterAudio);
@@ -261,10 +264,10 @@ namespace EverythingToolbar.Helpers
                 NotifyFilter = NotifyFilters.FileName
             };
 
-            watcher.Changed += new FileSystemEventHandler(OnFileChanged);
-            watcher.Created += new FileSystemEventHandler(OnFileChanged);
-            watcher.Deleted += new FileSystemEventHandler(OnFileChanged);
-            watcher.Renamed += new RenamedEventHandler(OnFileRenamed);
+            watcher.Changed += OnFileChanged;
+            watcher.Created += OnFileChanged;
+            watcher.Deleted += OnFileChanged;
+            watcher.Renamed += OnFileRenamed;
 
             watcher.EnableRaisingEvents = true;
         }

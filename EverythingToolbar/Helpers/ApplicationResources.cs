@@ -11,7 +11,7 @@ namespace EverythingToolbar.Helpers
         public ResourceDictionary NewResource { get; set; }
     }
 
-    class ApplicationResources
+    internal sealed class ApplicationResources
     {
         public event EventHandler<ResourcesChangedEventArgs> ResourceChanged;
 

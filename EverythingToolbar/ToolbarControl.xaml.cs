@@ -1,4 +1,5 @@
-﻿using EverythingToolbar.Helpers;
+﻿using EverythingToolbar.Data;
+using EverythingToolbar.Helpers;
 using NHotkey;
 using System;
 using System.Runtime.InteropServices;
@@ -14,13 +15,13 @@ namespace EverythingToolbar
     {
         // Requires Windows 10 Anniversary Update
         [DllImport("user32")]
-        static extern uint GetDpiForWindow(IntPtr hWnd);
+        internal static extern uint GetDpiForWindow(IntPtr hWnd);
 
         public event EventHandler<EventArgs> FocusRequested;
         public event EventHandler<EventArgs> UnfocusRequested;
 
-        double CurrentDpi { get; set; }
-        double InitialDpi { get; set; }
+        internal double CurrentDpi { get; set; }
+        internal double InitialDpi { get; set; }
 
         public ToolbarControl()
         {
@@ -46,7 +47,7 @@ namespace EverythingToolbar
             SearchResultsPopup.Closed += (object sender, EventArgs e) =>
             {
                 Keyboard.Focus(KeyboardFocusCapture);
-                UnfocusRequested?.Invoke(this, new EventArgs());
+                UnfocusRequested?.Invoke(this, EventArgs.Empty);
             };
 
             ShortcutManager.Instance.AddOrReplace("FocusSearchBox",
@@ -144,7 +145,7 @@ namespace EverythingToolbar
             }
             else if (e.Key == Key.Enter)
             {
-                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+                if ((Keyboard.Modifiers & ModifierKeys.Shift) != 0)
                 {
                     string path = "";
                     if (SearchResultsPopup.SearchResultsView.SearchResultsListView.SelectedIndex >= 0)
@@ -168,7 +169,7 @@ namespace EverythingToolbar
 
             if (e.Key == Key.Tab)
             {
-                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+                if ((Keyboard.Modifiers & ModifierKeys.Shift) != 0)
                     EverythingSearch.Instance.CycleFilters(-1);
                 else
                     EverythingSearch.Instance.CycleFilters(1);
@@ -177,7 +178,7 @@ namespace EverythingToolbar
 
         private void OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            FocusRequested?.Invoke(this, new EventArgs());
+            FocusRequested?.Invoke(this, EventArgs.Empty);
         }
 
         [DllImport("user32.dll")]
@@ -193,7 +194,7 @@ namespace EverythingToolbar
             else
             {
                 SetForegroundWindow(((HwndSource)PresentationSource.FromVisual(this)).Handle);
-                FocusRequested?.Invoke(this, new EventArgs());
+                FocusRequested?.Invoke(this, EventArgs.Empty);
                 Keyboard.Focus(SearchBox);
 
                 if (Properties.Settings.Default.isIconOnly)

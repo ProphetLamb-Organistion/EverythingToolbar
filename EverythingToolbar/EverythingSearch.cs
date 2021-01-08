@@ -17,7 +17,7 @@ using EverythingToolbar.Properties;
 
 namespace EverythingToolbar
 {
-    class EverythingSearch : INotifyPropertyChanged
+    internal sealed class EverythingSearch : ViewModelBase
     {
         private enum ErrorCode
         {
@@ -86,14 +86,10 @@ namespace EverythingToolbar
             get => _searchTerm;
             set
             {
-                if (_searchTerm == value)
-                    return;
-
-                _searchTerm = value;
+                Set(ref _searchTerm, value);
                 lock (_searchResultsLock)
                     SearchResults.Clear();
                 QueryBatch();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SearchTerm"));
             }
         }
 
@@ -103,14 +99,10 @@ namespace EverythingToolbar
             get => _currentFilter ?? FilterLoader.Instance.DefaultFilters[0];
             set
             {
-                if (_currentFilter == value)
-                    return;
-
-                _currentFilter = value;
+                Set(ref _currentFilter, value);
                 lock (_searchResultsLock)
                     SearchResults.Clear();
                 QueryBatch();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentFilter"));
             }
         }
 
@@ -122,13 +114,11 @@ namespace EverythingToolbar
         private readonly ILogger logger;
         private CancellationTokenSource cancellationTokenSource;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private EverythingSearch()
         {
             logger = ToolbarLogger.GetLogger("EverythingToolbar");
 
-            Favorites.ReadAsync().ConfigureAwait(false);
+            var readFavs = Favorites.ReadAsync();
 
             try
             {
@@ -158,6 +148,9 @@ namespace EverythingToolbar
 
             Settings.Default.PropertyChanged += OnSettingChanged;
             BindingOperations.EnableCollectionSynchronization(SearchResults, _searchResultsLock);
+
+            // Lock until favorites are read
+            readFavs.Wait();
         }
 
         private void OnSettingChanged(object sender, PropertyChangedEventArgs e)
@@ -185,7 +178,7 @@ namespace EverythingToolbar
             if (SearchTerm == null)
                 return;
 
-            if (String.IsNullOrEmpty(SearchTerm) && Settings.Default.isHideEmptySearchResults)
+            if (SearchTerm.Length == 0 && Settings.Default.isHideEmptySearchResults)
                 return;
 
             cancellationTokenSource = new CancellationTokenSource();
@@ -299,10 +292,6 @@ namespace EverythingToolbar
                     {
                         Settings.Default.everythingPath = openFileDialog.FileName;
                         Settings.Default.Save();
-                    }
-                    else
-                    {
-                        return;
                     }
                 }
             }

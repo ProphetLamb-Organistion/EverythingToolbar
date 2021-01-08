@@ -49,19 +49,19 @@ namespace EverythingToolbar
             StringBuilder shortcutText = new StringBuilder();
             if ((Modifiers & ModifierKeys.Control) != 0)
             {
-                shortcutText.Append(Properties.Resources.KeyCtrl + "+");
+                shortcutText.Append(Properties.Resources.KeyCtrl).Append('+');
             }
             if ((Modifiers & ModifierKeys.Windows) != 0)
             {
-                shortcutText.Append(Properties.Resources.KeyWin + "+");
+                shortcutText.Append(Properties.Resources.KeyWin).Append('+');
             }
             if ((Modifiers & ModifierKeys.Alt) != 0)
             {
-                shortcutText.Append(Properties.Resources.KeyAlt + "+");
+                shortcutText.Append(Properties.Resources.KeyAlt).Append('+');
             }
             if ((Modifiers & ModifierKeys.Shift) != 0)
             {
-                shortcutText.Append(Properties.Resources.KeyShift + "+");
+                shortcutText.Append(Properties.Resources.KeyShift).Append('+');
             }
             shortcutText.Append(Key.ToString());
 

@@ -7,7 +7,7 @@ using System.Windows;
 using System.Linq;
 using System.Windows.Media;
 
-namespace EverythingToolbar
+namespace EverythingToolbar.Helpers
 {
     [Flags]
     public enum ThumbnailOptions
@@ -21,7 +21,7 @@ namespace EverythingToolbar
     }
 
     // Based on: https://github.com/Wox-launcher/Wox/blob/master/Wox.Infrastructure/Image/ThumbnailReader.cs
-    public class WindowsThumbnailProvider
+    public static class WindowsThumbnailProvider
     {
         private const string IShellItem2Guid = "7E9FB0D3-919F-4307-AB2E-9B1860310C93";
 
@@ -103,7 +103,6 @@ namespace EverythingToolbar
             public int Width { set { width = value; } }
             public int Height { set { height = value; } }
         };
-
 
         public static BitmapSource GetThumbnail(string fileName, int width, int height)
         {

@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 
 namespace EverythingToolbar.Helpers
 {
-    class ShellUtils
+    internal static class ShellUtils
     {
         [DllImport("shell32.dll", CharSet = CharSet.Auto)]
-        static extern bool ShellExecuteEx(ref SHELLEXECUTEINFO lpExecInfo);
+        public static extern bool ShellExecuteEx(ref SHELLEXECUTEINFO lpExecInfo);
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
         public struct SHELLEXECUTEINFO

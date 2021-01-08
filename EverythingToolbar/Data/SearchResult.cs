@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace EverythingToolbar
+namespace EverythingToolbar.Data
 {
     /*
      * 1. IOOps should always be async.
@@ -18,7 +17,7 @@ namespace EverythingToolbar
      *    Therefore use SetFullPathAndFileName & SetIconSourceFilePath.
      * 4. If one UnauthorizedAccessException is thrown other IOOps will almost certainly do so as-well, so we save precious cycles waiting for IO and Exception handling by canceling after one Exception.
      */
-    public class SearchResult : IEquatable<SearchResult>
+    public sealed class SearchResult : IEquatable<SearchResult>
     {
         public bool IsFile { get; set; }
 
@@ -46,14 +45,13 @@ namespace EverythingToolbar
         private string _iconSourceFilePath;
         public string IconSourceFilePath { get => _iconSourceFilePath; set => SetIconSourceFilePath(value); }
 
-        public Task FetchFileInfo { get; private set; }
+        public Task FetchFileInfo { get; private set; } = Task.CompletedTask;
 
         public bool IsFavorite { get; set; }
 
         private async void SetFullPathAndFileName(string value)
         {
-            if (FetchFileInfo != null)
-                await FetchFileInfo.ConfigureAwait(true);
+            await FetchFileInfo;
             FetchFileInfo = Task.Run(() =>
             {
                 if (value is null)
@@ -85,8 +83,7 @@ namespace EverythingToolbar
 
         private async void SetIconSourceFilePath(string value)
         {
-            if (FetchFileInfo != null)
-                await FetchFileInfo.ConfigureAwait(true);
+            await FetchFileInfo;
             FetchFileInfo = Task.Run(() =>
             {
                 _iconSourceFilePath = value;
@@ -176,12 +173,12 @@ namespace EverythingToolbar
         public override bool Equals(object obj) => Equals(obj as SearchResult);
         public bool Equals(SearchResult other) => other != null
             && IsFile == other.IsFile
-            && String.Equals(FullPathAndFileName, other.FullPathAndFileName, StringComparison.OrdinalIgnoreCase)
-            && String.Equals(HighlightedPath, other.HighlightedPath, StringComparison.OrdinalIgnoreCase)
-            && String.Equals(HighlightedFileName, other.HighlightedFileName, StringComparison.OrdinalIgnoreCase)
-            && String.Equals(FileSize, other.FileSize, StringComparison.OrdinalIgnoreCase)
-            && String.Equals(DateModified, other.DateModified, StringComparison.OrdinalIgnoreCase)
-            && String.Equals(IconSourceFilePath, other.IconSourceFilePath, StringComparison.OrdinalIgnoreCase);
+            && FullPathAndFileName == other.FullPathAndFileName
+            && HighlightedPath == other.HighlightedPath
+            && HighlightedFileName == other.HighlightedFileName
+            && FileSize == other.FileSize
+            && DateModified == other.DateModified
+            && IconSourceFilePath == other.IconSourceFilePath;
 
         public override int GetHashCode()
         {

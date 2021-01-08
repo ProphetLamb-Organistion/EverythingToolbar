@@ -13,9 +13,9 @@ namespace EverythingToolbar
         public static Edge taskbarEdge;
         public static double taskbarHeight = 0;
         public static double taskbarWidth = 0;
-        Size dragStartSize = new Size();
-        Point dragStartPosition = new Point();
-        
+        private Size dragStartSize = new Size();
+        private Point dragStartPosition = new Point();
+
         public new double Height
         {
             get
@@ -29,7 +29,7 @@ namespace EverythingToolbar
                 SetValue(HeightProperty, newHeight);
             }
         }
-        
+
         public new double Width
         {
             get

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using EverythingToolbar.Helpers;
+
+using System;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 
-namespace EverythingToolbar
+namespace EverythingToolbar.Data
 {
     public enum FileType
     {
@@ -12,31 +14,20 @@ namespace EverythingToolbar
     }
 
     [Serializable]
-    public class Rule : INotifyPropertyChanged
+    public sealed class Rule : ViewModelBase
     {
-        [field: NonSerialized]
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private string _name;
         public string Name
         {
             get => _name;
-            set
-            {
-                _name = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Name"));
-            }
+            set => Set(ref _name, value);
         }
 
         private FileType _filetype;
         public FileType Type
         {
             get => _filetype;
-            set
-            {
-                _filetype = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("FileType"));
-            }
+            set => Set(ref _filetype, value, "FileType");
         }
 
         private string _expression;
@@ -45,9 +36,8 @@ namespace EverythingToolbar
             get => _expression;
             set
             {
-                _expression = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Expression"));
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ExpressionValid"));
+                Set(ref _expression, value);
+                OnPropertyChanged("ExpressionValid");
             }
         }
 
@@ -55,11 +45,7 @@ namespace EverythingToolbar
         public string Command
         {
             get => _command;
-            set
-            {
-                _command = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Command"));
-            }
+            set => Set(ref _command, value);
         }
 
         public bool ExpressionValid

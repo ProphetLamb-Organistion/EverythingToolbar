@@ -1,4 +1,5 @@
 ﻿using EverythingToolbar;
+using EverythingToolbar.Helpers;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;

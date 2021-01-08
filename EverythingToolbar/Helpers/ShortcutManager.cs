@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace EverythingToolbar.Helpers
 {
-    class ShortcutManager
+    internal sealed class ShortcutManager
     {
         public static readonly ShortcutManager Instance = new ShortcutManager();
 
