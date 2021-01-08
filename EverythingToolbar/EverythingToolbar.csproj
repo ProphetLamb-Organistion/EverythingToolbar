@@ -69,6 +69,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EverythingMonitor.cs" />
     <Compile Include="Helpers\ArgumentParser.cs" />
     <Compile Include="Helpers\ViewModelBase.cs" />
     <Compile Include="Data\QuickCommand.cs" />

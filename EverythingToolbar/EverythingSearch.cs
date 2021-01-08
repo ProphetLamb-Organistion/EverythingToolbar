@@ -279,23 +279,11 @@ namespace EverythingToolbar
 
         public void OpenLastSearchInEverything(string highlighted_file = "")
         {
-            if(!File.Exists(Settings.Default.everythingPath))
+            if(!File.Exists(Settings.Default.everythingPath) && !SelectEverythingBinaries())
             {
-                MessageBox.Show(Resources.MessageBoxSelectEverythingExe);
-                using (OpenFileDialog openFileDialog = new OpenFileDialog())
-                {
-                    openFileDialog.InitialDirectory = "c:\\";
-                    openFileDialog.Filter = "Everything.exe|Everything.exe|All files (*.*)|*.*";
-                    openFileDialog.FilterIndex = 1;
-
-                    if (openFileDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        Settings.Default.everythingPath = openFileDialog.FileName;
-                        Settings.Default.Save();
-                    }
-                }
+                logger.Warn("Everything binaries could not be located. OpenFileDialog canceled.");
+                return;
             }
-
             string args = "";
             if (Settings.Default.sortBy <= 2) args += " -sort \"Name\"";
             else if (Settings.Default.sortBy <= 4) args += " -sort \"Path\"";
@@ -330,6 +318,25 @@ namespace EverythingToolbar
         public bool GetIsFastSort(uint sortBy)
         {
             return Everything_IsFastSort(sortBy);
+        }
+
+        public static bool SelectEverythingBinaries()
+        {
+            MessageBox.Show(Resources.MessageBoxSelectEverythingExe);
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = "c:\\";
+                openFileDialog.Filter = "Everything.exe|Everything.exe|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 1;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    Settings.Default.everythingPath = openFileDialog.FileName;
+                    Settings.Default.Save();
+                    return true;
+                }
+                return false;
+            }
         }
 
         private void HandleError(ErrorCode code)
