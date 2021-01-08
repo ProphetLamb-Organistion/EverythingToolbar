@@ -75,7 +75,7 @@ namespace CSDeskBand
         /// <inheritdoc/>
         public int CloseDW([In] uint dwReserved)
         {
-            Closed?.Invoke(this, null);
+            Closed?.Invoke(this, EventArgs.Empty);
             return HRESULT.S_OK;
         }
 
@@ -193,7 +193,7 @@ namespace CSDeskBand
             // pUnkSite null means deskband was closed
             if (pUnkSite == null)
             {
-                Closed?.Invoke(this, null);
+                Closed?.Invoke(this, EventArgs.Empty);
                 return HRESULT.S_OK;
             }
 
@@ -995,7 +995,7 @@ namespace CSDeskBand
 namespace CSDeskBand
 {
     using CSDeskBand.Interop;
-    using EverythingToolbar;
+    using EverythingToolbar.Helpers;
     using NLog;
     using System;
     using System.Runtime.InteropServices;
